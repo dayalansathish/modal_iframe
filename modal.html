@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Bootstrap Modal with iFrame</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="modal.css">
+    <style>
+        /* comment loader */
+        /* Ensures that the modal content only scrolls vertically */
+        .modal-body {
+            overflow-y: auto;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            position: relative;
+            padding: 0;
+        }
+
+        /* Please Wait Loader Container */
+        .loader-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            color: #000000; /* White color text */
+        }
+
+        /* Please Wait Animation */
+        #loader {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        #loader span {
+            animation: blink 1s linear infinite;
+        }
+
+        /* Hide iframe initially */
+        #websiteIframe {
+            display: none;
+        }
+   
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        demo modal
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Loader Container -->
+                <!-- <div id="loader-container" class="loader-container">
+                    <div id="loader">Please wait<span>...</span></div>
+                </div> -->
+
+                <div id="loader-container" class="loader">
+                    <div class="inner one"></div>
+                    <div class="inner two"></div>
+                    <div class="inner three"></div>
+                  </div>
+
+                <!-- Iframe container -->
+                <div class="ratio ratio-16x9 m-2">
+                    <iframe class="rounded" id="websiteIframe"
+                            title="Website View" frameborder="0"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+
+    var originalSrc = "https://getbootstrap.com/";
+
+
+    // Event listener for when the modal is shown
+    document.getElementById('staticBackdrop').addEventListener('shown.bs.modal', function () {
+
+
+        // Show the loader and hide the iframe initially
+        document.getElementById('loader-container').style.display = 'flex';
+        document.getElementById('websiteIframe').style.display = 'none';
+
+
+        // Set a timeout to load the iframe source after a delay
+        setTimeout(function() {
+            document.getElementById('websiteIframe').src = originalSrc;
+        }, 500);
+    });
+
+    // Event listener for when the iframe finishes loading
+    document.getElementById('websiteIframe').addEventListener('load', function () {
+
+        document.getElementById('loader-container').style.display = 'none';
+        document.getElementById('websiteIframe').style.display = 'block';
+    });
+
+    // Event listener for when the modal is closed
+    document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', function () {
+
+        // Reset the iframe src to an empty string
+        document.getElementById('websiteIframe').src = '';
+    });
+
+</script>
+
+</body>
+</html>
